@@ -1,0 +1,17 @@
+{
+  "name": "carbon-footprint-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node js/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express-generator": "^4.16.1",
+    "google-distance-matrix": "^1.1.1"
+  }
+}

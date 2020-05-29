@@ -12,13 +12,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/getDistance', (req, res) => {
-    //these are request variables - TODO
-    //var origins = ['Mumbai'];
     var origins = req.body.origins;
     var destinations = req.body.destinations;
     var mode = req.body.mode;
-    //var destinations = ['Mysore'];
-    //TODO - set mode from req
+    var vehicle = req.body.vehicle;
+    var totalEmissions;
     distance.mode(mode);
     var actualDistance;
     distance.matrix(origins, destinations, function (err, distances) {
@@ -35,10 +33,18 @@ app.post('/getDistance', (req, res) => {
                     var destination = distances.destination_addresses[j];
                     if (distances.rows[0].elements[j].status == 'OK') {
                         actualDistance = distances.rows[i].elements[j].distance.text;
+                        if(mode === "walking" || mode === "bicycling"){
+                            vehicle=mode;
+                        }
+                        totalEmissions = getEmissions(vehicle, parseInt(actualDistance));
+                        console.log(vehicle);
+                        console.log(actualDistance);
+                        console.log(totalEmissions);
                         res.json(
                             {
                                 ResponseString: 'Distance from ' + origin + ' to ' + destination + ' by ' + mode + ' is ' + actualDistance,
-                                distance: actualDistance
+                                distance: actualDistance,
+                                emissions: totalEmissions
                             });
                     } else {
                         res.send(destination + ' is not reachable by ' + mode + ' from ' + origin);
@@ -50,4 +56,28 @@ app.post('/getDistance', (req, res) => {
 }
 );
 
+
+getEmissions = (vehicle, distance) =>{
+    console.log("inside getEmissions");
+    switch(vehicle){
+        case 'motorcycle': return distance * 83 ;
+        break;
+        case 'lorry': return distance * 300;
+        break;
+        case 'car (diesel)': return distance * 121.5;   
+        break;
+        case 'car (petrol)': return distance * 123.5;   
+        break;
+        case 'car (electric)': return distance * 12;
+        break;
+        case 'bus': return distance * 80;
+        break;
+        case 'train':return distance * 28;
+        break;
+        case 'walking':return distance * 3;
+        break;
+        case 'bicycling': return distance * 21;
+        break;
+    }
+}
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-generator": "^4.16.1",
-    "google-distance-matrix": "^1.1.1"
+    "google-distance-matrix": "^1.1.1",
+    "unirest": "^0.6.0"
   }
 }

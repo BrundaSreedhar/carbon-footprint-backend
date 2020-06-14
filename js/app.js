@@ -3,7 +3,8 @@ const app = express()
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = 3000
-const distance = require('google-distance-matrix')
+const distance = require('google-distance-matrix');
+const unirest = require('unirest');
 
 distance.key('AIzaSyBJTYLXHomn5JwCOsxRme-xlTpN5_6uaX4');
 
@@ -55,6 +56,16 @@ app.post('/getDistance', (req, res) => {
     })
 }
 );
+
+app.get('/getTweets', (req, res) => {
+
+    unirest.get("https://xvgr157zoj:dm2zf85y2v@kakfa-twitter-start-8087333619.us-east-1.bonsaisearch.net:443/tweet-load/_search")
+        .header("Accept", "application/json")
+        .end(function (result) {
+            res.send(result.body);
+        });
+
+});
 
 
 getEmissions = (vehicle, distance) =>{

@@ -17,10 +17,30 @@ app.post('/getDistance', (req, res) => {
     var destinations = req.body.destinations;
     var mode = req.body.mode;
     var vehicle = req.body.vehicle;
+    var seatType = req.body.seatType; 
     var totalEmissions;
-    distance.mode(mode);
     var actualDistance;
+
+    var originLatLng = origins[0];
+    var destLatLng = destinations[0];
+
+    if(mode == "flight"){
+        var airDistance = getDistanceForLatLng(originLatLng, destLatLng);
+        var flightEmissions = airDistance*getFlightEmissions(seatType);
+        res.json(
+            {
+                distance: airDistance,
+                emissions: flightEmissions
+            });
+            console.log(airDistance, flightEmissions);
+        return;
+    }
+  
+
     distance.matrix(origins, destinations, function (err, distances) {
+        distance.mode(mode);
+        console.log("Origins: ", origins);
+        console.log("Destinations: ", destinations);
         if (err) {
             return console.log(err);
         }
@@ -67,7 +87,51 @@ app.get('/getTweets', (req, res) => {
 
 });
 
+getDistanceForLatLng = (originLatLng, destLatLng) =>{
+  var  latLng1 = originLatLng.split(",");
+    var lat1= latLng1[0];
+    var lng1= latLng1[1];
 
+    var latLng2 = destLatLng.split(",");
+    var lat2= latLng2[0];
+   var  lng2= latLng2[1];
+
+   	
+const R = 6371e3; // metres
+const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+const φ2 = lat2 * Math.PI/180;
+const Δφ = (lat2-lat1) * Math.PI/180;
+const Δλ = (lng2-lng1) * Math.PI/180;
+
+const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+const d = R * c; // in metres
+const distInKm = d/1000;
+
+return distInKm;
+    console.log(lat1, lng1, lat2, lng2);
+    console.log("distance is ",distInKm);
+}
+
+getFlightEmissions = (seatType) =>{
+    console.log("inside getFlightEmissions");
+    switch(seatType){
+        case 'economy': return 116;
+        break;
+
+        case 'first class': return 336;
+        break;
+
+        case 'premium economy': return 232;
+        break;
+
+        case 'business class':return 243 ;
+        break;
+    }
+}
 getEmissions = (vehicle, distance) =>{
     console.log("inside getEmissions");
     switch(vehicle){

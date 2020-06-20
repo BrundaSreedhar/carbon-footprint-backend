@@ -5,12 +5,19 @@ const cors = require('cors');
 const port = 3000
 const distance = require('google-distance-matrix');
 const unirest = require('unirest');
+const db = require('./db');
 
 distance.key('AIzaSyBJTYLXHomn5JwCOsxRme-xlTpN5_6uaX4');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.get('/getAirportList', (req, res) => {
+    //var index = req.body.index;
+    //db.connectToDB(index);
+    db.connectToDB();
+});
 
 app.post('/getDistance', (req, res) => {
     var origins = req.body.origins;
@@ -20,12 +27,13 @@ app.post('/getDistance', (req, res) => {
     var seatType = req.body.seatType; 
     var totalEmissions;
     var actualDistance;
-
     var originLatLng = origins[0];
     var destLatLng = destinations[0];
 
+
+    //when mode is flight, find geodesic distance and calculate emissions
     if(mode == "flight"){
-        var airDistance = getDistanceForLatLng(originLatLng, destLatLng);
+        var airDistance = getGeodesicDistance(originLatLng, destLatLng);
         var flightEmissions = airDistance*getFlightEmissions(seatType);
         res.json(
             {
@@ -35,10 +43,14 @@ app.post('/getDistance', (req, res) => {
             console.log(airDistance, flightEmissions);
         return;
     }
-  
 
+    //use distance matrix when mode is not flight and obtain distance travelled using Maps API
+    //use geodesic distance if Maps API doesnt return distance
     distance.matrix(origins, destinations, function (err, distances) {
         distance.mode(mode);
+        if(mode === "walking" || mode === "bicycling"){
+            vehicle = mode;
+        }
         console.log("Origins: ", origins);
         console.log("Destinations: ", destinations);
         if (err) {
@@ -54,13 +66,7 @@ app.post('/getDistance', (req, res) => {
                     var destination = distances.destination_addresses[j];
                     if (distances.rows[0].elements[j].status == 'OK') {
                         actualDistance = distances.rows[i].elements[j].distance.text;
-                        if(mode === "walking" || mode === "bicycling"){
-                            vehicle=mode;
-                        }
-                        totalEmissions = getEmissions(vehicle, parseInt(actualDistance));
-                        console.log(vehicle);
-                        console.log(actualDistance);
-                        console.log(totalEmissions);
+                        totalEmissions = getEmissions(vehicle, parseInt(actualDistance.replace(",", "")));
                         res.json(
                             {
                                 ResponseString: 'Distance from ' + origin + ' to ' + destination + ' by ' + mode + ' is ' + actualDistance,
@@ -68,7 +74,14 @@ app.post('/getDistance', (req, res) => {
                                 emissions: totalEmissions
                             });
                     } else {
-                        res.send(destination + ' is not reachable by ' + mode + ' from ' + origin);
+                        var geoDesicDistance = getGeodesicDistance(originLatLng, destLatLng);
+                        totalEmissions = getEmissions(vehicle, parseInt(geoDesicDistance));
+                        res.json(
+                            {
+                                ResponseString: 'Distance from ' + origin + ' to ' + destination + ' by ' + mode + ' is ' + actualDistance,
+                                distance: geoDesicDistance,
+                                emissions: totalEmissions
+                            });
                     }
                 }
             }
@@ -87,7 +100,7 @@ app.get('/getTweets', (req, res) => {
 
 });
 
-getDistanceForLatLng = (originLatLng, destLatLng) =>{
+getGeodesicDistance = (originLatLng, destLatLng) =>{
   var  latLng1 = originLatLng.split(",");
     var lat1= latLng1[0];
     var lng1= latLng1[1];
@@ -134,6 +147,7 @@ getFlightEmissions = (seatType) =>{
 }
 getEmissions = (vehicle, distance) =>{
     console.log("inside getEmissions");
+    console.log("distance recd is :" +distance);
     switch(vehicle){
         case 'motorcycle': return distance * 83 ;
         break;

@@ -13,10 +13,12 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/getAirportList', (req, res) => {
+app.get('/getAirportList', async (req, res) => {
     //var index = req.body.index;
     //db.connectToDB(index);
-    db.connectToDB();
+    var list = await db.connectToDB();
+    console.log(list);
+    res.send(list);
 });
 
 app.post('/getDistance', (req, res) => {

@@ -14,9 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/getAirportList', async (req, res) => {
-    //var index = req.body.index;
-    //db.connectToDB(index);
-    var list = await db.connectToDB();
+    var list = await db.getNearestAirports();
     console.log(list);
     res.send(list);
 });

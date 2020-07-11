@@ -13,7 +13,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/getAirportList', async (req, res) => {
+app.post('/getAirportList', async (req, res) => {
     var list = await db.getNearestAirports();
     console.log(list);
     res.send(list);

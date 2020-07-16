@@ -6,7 +6,6 @@ const port = 3000
 const distance = require('google-distance-matrix');
 const unirest = require('unirest');
 const db = require('./db');
-
 distance.key('AIzaSyBJTYLXHomn5JwCOsxRme-xlTpN5_6uaX4');
 
 app.use(cors());
@@ -14,7 +13,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/getAirportList', async (req, res) => {
-    var list = await db.getNearestAirports(req.body.lat, req.body.lon);
+    //req.body.index can be IATA code, city name or a part of airport name
+    var list = await db.getAirport(req.body.index);
     console.log(list);
     res.send(list);
 });

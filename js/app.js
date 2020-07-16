@@ -24,7 +24,7 @@ app.post('/getDistance', (req, res) => {
     var destinations = req.body.destinations;
     var mode = req.body.mode;
     var vehicle = req.body.vehicle;
-    var seatType = req.body.seatType; 
+    var seatType = req.body.seatType;
     var totalEmissions;
     var actualDistance;
     var originLatLng = origins[0];
@@ -32,15 +32,15 @@ app.post('/getDistance', (req, res) => {
 
 
     //when mode is flight, find geodesic distance and calculate emissions
-    if(mode == "flight"){
+    if (mode == "flight") {
         var airDistance = getGeodesicDistance(originLatLng, destLatLng);
-        var flightEmissions = airDistance*getFlightEmissions(seatType);
+        var flightEmissions = airDistance * getFlightEmissions(seatType);
         res.json(
             {
                 distance: airDistance,
                 emissions: flightEmissions
             });
-            console.log(airDistance, flightEmissions);
+        console.log(airDistance, flightEmissions);
         return;
     }
 
@@ -48,7 +48,7 @@ app.post('/getDistance', (req, res) => {
     //use geodesic distance if Maps API doesnt return distance
     distance.matrix(origins, destinations, function (err, distances) {
         distance.mode(mode);
-        if(mode === "walking" || mode === "bicycling"){
+        if (mode === "walking" || mode === "bicycling") {
             vehicle = mode;
         }
         console.log("Origins: ", origins);
@@ -100,73 +100,73 @@ app.get('/getTweets', (req, res) => {
 
 });
 
-getGeodesicDistance = (originLatLng, destLatLng) =>{
-  var  latLng1 = originLatLng.split(",");
-    var lat1= latLng1[0];
-    var lng1= latLng1[1];
+getGeodesicDistance = (originLatLng, destLatLng) => {
+    var latLng1 = originLatLng.split(",");
+    var lat1 = latLng1[0];
+    var lng1 = latLng1[1];
 
     var latLng2 = destLatLng.split(",");
-    var lat2= latLng2[0];
-   var  lng2= latLng2[1];
+    var lat2 = latLng2[0];
+    var lng2 = latLng2[1];
 
-   	
-const R = 6371e3; // metres
-const φ1 = lat1 * Math.PI/180; // φ, λ in radians
-const φ2 = lat2 * Math.PI/180;
-const Δφ = (lat2-lat1) * Math.PI/180;
-const Δλ = (lng2-lng1) * Math.PI/180;
 
-const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-          Math.cos(φ1) * Math.cos(φ2) *
-          Math.sin(Δλ/2) * Math.sin(Δλ/2);
-const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const R = 6371e3; // metres
+    const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lng2 - lng1) * Math.PI / 180;
 
-const d = R * c; // in metres
-const distInKm = d/1000;
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-return distInKm;
+    const d = R * c; // in metres
+    const distInKm = d / 1000;
+
+    return distInKm;
     console.log(lat1, lng1, lat2, lng2);
-    console.log("distance is ",distInKm);
+    console.log("distance is ", distInKm);
 }
 
-getFlightEmissions = (seatType) =>{
+getFlightEmissions = (seatType) => {
     console.log("inside getFlightEmissions");
-    switch(seatType){
+    switch (seatType) {
         case 'economy': return 116;
-        break;
+            break;
 
         case 'first class': return 336;
-        break;
+            break;
 
         case 'premium economy': return 232;
-        break;
+            break;
 
-        case 'business class':return 243 ;
-        break;
+        case 'business class': return 243;
+            break;
     }
 }
-getEmissions = (vehicle, distance) =>{
+getEmissions = (vehicle, distance) => {
     console.log("inside getEmissions");
-    console.log("distance recd is :" +distance);
-    switch(vehicle){
-        case 'motorcycle': return distance * 83 ;
-        break;
+    console.log("distance recd is :" + distance);
+    switch (vehicle) {
+        case 'motorcycle': return distance * 83;
+            break;
         case 'lorry': return distance * 300;
-        break;
-        case 'car (diesel)': return distance * 121.5;   
-        break;
-        case 'car (petrol)': return distance * 123.5;   
-        break;
+            break;
+        case 'car (diesel)': return distance * 121.5;
+            break;
+        case 'car (petrol)': return distance * 123.5;
+            break;
         case 'car (electric)': return distance * 12;
-        break;
+            break;
         case 'bus': return distance * 80;
-        break;
-        case 'train':return distance * 28;
-        break;
-        case 'walking':return distance * 3;
-        break;
+            break;
+        case 'train': return distance * 28;
+            break;
+        case 'walking': return distance * 3;
+            break;
         case 'bicycling': return distance * 21;
-        break;
+            break;
     }
 }
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

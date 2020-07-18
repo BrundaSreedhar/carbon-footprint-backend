@@ -6,6 +6,8 @@ const port = 3000
 const distance = require('google-distance-matrix');
 const unirest = require('unirest');
 const db = require('./db');
+const NewsAPI=require('newsapi');
+const newsapi = new NewsAPI("488a56d04cfe4918bf376d2d77d47604");
 distance.key('AIzaSyBJTYLXHomn5JwCOsxRme-xlTpN5_6uaX4');
 
 app.use(cors());
@@ -100,10 +102,18 @@ app.get('/getTweets', (req, res) => {
 
 });
 
-<<<<<<< HEAD
-=======
+app.get('/getNews', (req, res) => {
+    newsapi.v2.everything({
+        q: 'climate action, climate change, global warming',
+        language: 'en',
+        sortBy: 'relevancy',
+        page: 5
+      }).then(response => {
+        console.log(response);
+        res.send(response);
+      });
+});
 
->>>>>>> 30c97093abb193283de8bd6cdde10a949530bcf8
 getGeodesicDistance = (originLatLng, destLatLng) => {
     var latLng1 = originLatLng.split(",");
     var lat1 = latLng1[0];
@@ -112,7 +122,6 @@ getGeodesicDistance = (originLatLng, destLatLng) => {
     var latLng2 = destLatLng.split(",");
     var lat2 = latLng2[0];
     var lng2 = latLng2[1];
-<<<<<<< HEAD
 
 
     const R = 6371e3; // metres
@@ -129,24 +138,6 @@ getGeodesicDistance = (originLatLng, destLatLng) => {
     const d = R * c; // in metres
     const distInKm = d / 1000;
 
-=======
-
-
-    const R = 6371e3; // metres
-    const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
-    const φ2 = lat2 * Math.PI / 180;
-    const Δφ = (lat2 - lat1) * Math.PI / 180;
-    const Δλ = (lng2 - lng1) * Math.PI / 180;
-
-    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        Math.cos(φ1) * Math.cos(φ2) *
-        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const d = R * c; // in metres
-    const distInKm = d / 1000;
-
->>>>>>> 30c97093abb193283de8bd6cdde10a949530bcf8
     return distInKm;
     console.log(lat1, lng1, lat2, lng2);
     console.log("distance is ", distInKm);
@@ -168,10 +159,6 @@ getFlightEmissions = (seatType) => {
             break;
     }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 30c97093abb193283de8bd6cdde10a949530bcf8
 getEmissions = (vehicle, distance) => {
     console.log("inside getEmissions");
     console.log("distance recd is :" + distance);

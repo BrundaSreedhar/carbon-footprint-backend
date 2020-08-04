@@ -22,7 +22,7 @@ app.post('/getAirportList', async (req, res) => {
     res.send(list);
 });
 
-app.post("/hi", (req, res) => {
+app.get("/hi", (req, res) => {
     res.send("hi!");
 });
 app.post('/getDistance', (req, res) => {

@@ -6,7 +6,6 @@ const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 
 const distance = require('google-distance-matrix');
 const unirest = require('unirest');
 const db = require('./db');
-const redis = require('./redis');
 const NewsAPI=require('newsapi');
 const newsapi = new NewsAPI("488a56d04cfe4918bf376d2d77d47604");
 distance.key('AIzaSyBJTYLXHomn5JwCOsxRme-xlTpN5_6uaX4');

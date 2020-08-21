@@ -1,5 +1,5 @@
 const express = require('express');
-const app = express()
+const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 3000;
@@ -97,7 +97,7 @@ app.get('/getTweets', (req, res) => {
 
 app.get('/getNews', (req, res) => {
     newsapi.v2.everything({
-        q: 'climate action, climate change, global warming, carbon footprint',
+        q: 'carbon footprint',
         language: 'en',
         sortBy: 'relevancy',
         page: 5

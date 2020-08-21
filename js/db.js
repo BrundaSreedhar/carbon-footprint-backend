@@ -37,6 +37,7 @@ module.exports = {
         };
 
         var airportList = await client.db().collection("airportData").find(query).toArray();
+        console.log(airportList);
         return airportList;
     }
 };

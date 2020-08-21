@@ -17,15 +17,10 @@
     "express": "^4.17.1",
     "express-generator": "^4.16.1",
     "google-distance-matrix": "^1.1.1",
-    "ioredis": "^4.17.3",
     "mongod": "^2.0.0",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.19",
     "newsapi": "^2.4.0",
-    "openflights-data": "^1.0.5",
-    "redis": "^3.0.2",
-    "redis-rejson": "^1.0.0",
-    "redis-server": "^1.2.2",
     "unirest": "^0.6.0"
   }
 }

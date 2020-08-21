@@ -9,15 +9,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
+    "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
+    "csv-parser": "^2.3.3",
     "express": "^4.17.1",
     "express-generator": "^4.16.1",
     "google-distance-matrix": "^1.1.1",
     "mongod": "^2.0.0",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.19",
+<<<<<<< HEAD
     "newsapi": "^2.4.1",
+=======
+    "newsapi": "^2.4.0",
+>>>>>>> 07df48cb31ee2f8365a104e7207fb308f6a6aae7
     "unirest": "^0.6.0"
   }
 }

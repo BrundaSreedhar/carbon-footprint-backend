@@ -1,5 +1,5 @@
 const express = require('express');
-const app = express()
+const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 3000;

@@ -2,22 +2,17 @@ const express = require('express');
 const app = express()
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const port = 3000
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 3000;
 const distance = require('google-distance-matrix');
 const unirest = require('unirest');
 const db = require('./db');
-
+const NewsAPI = require('newsapi');
+const newsapi = new NewsAPI("488a56d04cfe4918bf376d2d77d47604");
 distance.key('AIzaSyBJTYLXHomn5JwCOsxRme-xlTpN5_6uaX4');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-app.post('/getAirportList', async (req, res) => {
-    var list = await db.getNearestAirports(req.body.lat, req.body.lon);
-    console.log(list);
-    res.send(list);
-});
 
 app.post('/getDistance', (req, res) => {
     var origins = req.body.origins;
@@ -100,6 +95,26 @@ app.get('/getTweets', (req, res) => {
 
 });
 
+<<<<<<< HEAD
+=======
+app.get('/getNews', (req, res) => {
+    newsapi.v2.everything({
+        q: 'climate action, climate change, global warming, carbon footprint',
+        language: 'en',
+        sortBy: 'relevancy',
+        page: 5
+    }).then(response => {
+        console.log(response);
+        res.send(response);
+    });
+});
+
+app.get('/getFlights', async(req, res) => {
+    airportList = await db.getAllAirports();
+    res.send(airportList);
+});
+
+>>>>>>> 3a93fc8ef50ee2ad5dd3a361e1c8f940b840c3dd
 getGeodesicDistance = (originLatLng, destLatLng) => {
     var latLng1 = originLatLng.split(",");
     var lat1 = latLng1[0];

@@ -1,21 +1,14 @@
 const { MongoClient } = require('mongodb');
 
 module.exports = {
-    getNearestAirports: async function (lat, lon) {
-        const R = 6371e3; // earth's mean radius in metres
-        const sin = Math.sin, cos = Math.cos, acos = Math.acos;
-        const π = Math.PI;
 
-       // latitude, longitude & radius of bounding circle
-       // const lat = 3.58;  
-       // const lon = 143.66;    
-        const radius = Number(500000);
-
+    getAllAirports: async function () {
         // set up database connection
         const uri = "mongodb+srv://cfcAdmin:ynwa1234@cluster0-ltgiv.mongodb.net/emissions?retryWrites=true&w=majority";
         const client = new MongoClient(uri);
         await client.connect();
 
+<<<<<<< HEAD
         // query points within first-cut bounding box (Lat & Lon should be indexed for fast query)
         minLat = lat - radius / R * 180 / π
         maxLat = lat + radius / R * 180 / π
@@ -38,6 +31,10 @@ module.exports = {
 
         var airportList = await client.db().collection("airportData").find(query).toArray();
         console.log(airportList);
+=======
+        var airportList = await client.db().collection("airportInfo").find().toArray();
+>>>>>>> 3a93fc8ef50ee2ad5dd3a361e1c8f940b840c3dd
         return airportList;
     }
 };
+

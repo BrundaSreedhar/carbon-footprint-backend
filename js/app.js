@@ -95,6 +95,8 @@ app.get('/getTweets', (req, res) => {
 
 });
 
+<<<<<<< HEAD
+=======
 app.get('/getNews', (req, res) => {
     newsapi.v2.everything({
         q: 'carbon footprint',
@@ -112,6 +114,7 @@ app.get('/getFlights', async(req, res) => {
     res.send(airportList);
 });
 
+>>>>>>> 3a93fc8ef50ee2ad5dd3a361e1c8f940b840c3dd
 getGeodesicDistance = (originLatLng, destLatLng) => {
     var latLng1 = originLatLng.split(",");
     var lat1 = latLng1[0];
